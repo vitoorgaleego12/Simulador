@@ -15,6 +15,10 @@
             --light: #F5F6FA;
             --dark: #2F3640;
             --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --success: #38b000;
+            --warning: #f9c74f;
+            --info: #4cc9f0;
+            --border-radius: 8px;
         }
         
         * {
@@ -52,7 +56,7 @@
         
         .card {
             background: white;
-            border-radius: 10px;
+            border-radius: var(--border-radius);
             padding: 1.5rem;
             margin-bottom: 2rem;
             box-shadow: var(--shadow);
@@ -124,7 +128,7 @@
         .simulator {
             background: white;
             padding: 2rem;
-            border-radius: 10px;
+            border-radius: var(--border-radius);
             box-shadow: var(--shadow);
         }
         
@@ -156,11 +160,141 @@
             margin-top: 0.5rem;
         }
         
-        .result-box {
-            background: var(--light);
+        /* NOVO ESTILO PARA RESULTADOS */
+        .results-container {
+            margin-top: 2rem;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+        
+        .results-header {
+            background: linear-gradient(135deg, var(--primary), #3a56e4);
+            color: white;
             padding: 1.5rem;
-            border-radius: 10px;
-            margin-top: 1.5rem;
+        }
+        
+        .results-title {
+            font-size: 1.4rem;
+            margin: 0;
+            font-weight: 600;
+        }
+        
+        .results-subtitle {
+            opacity: 0.9;
+            margin: 0.5rem 0 0 0;
+        }
+        
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            padding: 1.5rem;
+        }
+        
+        .result-card {
+            background: var(--light);
+            border-radius: var(--border-radius);
+            padding: 1.2rem;
+            text-align: center;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+        }
+        
+        .result-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+        }
+        
+        .result-card.positive {
+            border-top: 4px solid var(--success);
+        }
+        
+        .result-card.negative {
+            border-top: 4px solid var(--danger);
+        }
+        
+        .result-card.neutral {
+            border-top: 4px solid var(--primary);
+        }
+        
+        .card-label {
+            font-size: 0.9rem;
+            color: #6c757d;
+            margin-bottom: 0.5rem;
+        }
+        
+        .card-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 0;
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        .card-positive {
+            color: var(--success);
+        }
+        
+        .card-negative {
+            color: var(--danger);
+        }
+        
+        .card-description {
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+            color: #6c757d;
+        }
+        
+        .result-change {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-top: 0.8rem;
+        }
+        
+        .change-positive {
+            background-color: rgba(56, 176, 0, 0.15);
+            color: var(--success);
+        }
+        
+        .change-negative {
+            background-color: rgba(229, 56, 59, 0.15);
+            color: var(--danger);
+        }
+        
+        .results-summary {
+            background: #f8f9fa;
+            padding: 1.2rem 1.5rem;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .summary-text {
+            font-weight: 600;
+        }
+        
+        .summary-value {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        /* Responsividade para resultados */
+        @media (max-width: 768px) {
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .results-summary {
+                flex-direction: column;
+                text-align: center;
+                gap: 0.8rem;
+            }
         }
         
         .highlight {
@@ -339,12 +473,45 @@
                             </select>
                         </div>
                         
-                        <div class="result-box">
-                            <h3>Resultado da Simulação</h3>
-                            <p>Valor Total Investido: <span id="totalInvested" class="highlight">R$ 13.000,00</span></p>
-                            <p>Valor Final Bruto: <span id="finalAmount" class="highlight">R$ 21.037,40</span></p>
-                            <p>Valor Final Ajustado pela Inflação: <span id="adjustedAmount" class="highlight">R$ 13.456,23</span></p>
-                            <p>Ganho Real (acima da inflação): <span id="realGain" class="highlight">R$ 456,23</span></p>
+                        <!-- NOVA SEÇÃO DE RESULTADOS -->
+                        <div class="results-container">
+                            <div class="results-header">
+                                <h3 class="results-title">Resultado da Simulação</h3>
+                                <p class="results-subtitle">Projeção de <span id="resultYears">10 anos</span> com taxa de <span id="resultRate">10%</span> ao ano</p>
+                            </div>
+                            
+                            <div class="results-grid">
+                                <div class="result-card neutral">
+                                    <p class="card-label">Total Investido</p>
+                                    <h3 class="card-value" id="totalInvested">R$ 13.000,00</h3>
+                                    <p class="card-description">Valor total aplicado ao longo do período</p>
+                                </div>
+                                
+                                <div class="result-card positive">
+                                    <p class="card-label">Valor Final Bruto</p>
+                                    <h3 class="card-value" id="finalAmount">R$ 21.037,40</h3>
+                                    <p class="card-description">Valor antes de ajuste inflacionário</p>
+                                    <div class="result-change change-positive" id="nominalGainPercent">+61.8%</div>
+                                </div>
+                                
+                                <div class="result-card positive">
+                                    <p class="card-label">Valor Ajustado</p>
+                                    <h3 class="card-value" id="adjustedAmount">R$ 13.456,23</h3>
+                                    <p class="card-description">Valor real (poder de compra atual)</p>
+                                </div>
+                                
+                                <div class="result-card" id="realGainCard">
+                                    <p class="card-label">Ganho Real</p>
+                                    <h3 class="card-value card-positive" id="realGain">R$ 456,23</h3>
+                                    <p class="card-description">Acima da inflação</p>
+                                    <div class="result-change change-positive" id="realGainPercent">+3.5%</div>
+                                </div>
+                            </div>
+                            
+                            <div class="results-summary">
+                                <span class="summary-text">Rentabilidade real aproximada:</span>
+                                <span class="summary-value" id="annualRealReturn">0.34% ao ano</span>
+                            </div>
                         </div>
                     </div>
                     
@@ -518,17 +685,39 @@
     <script>
         // Inicializar gráfico
         const ctx = document.getElementById('investmentChart').getContext('2d');
+        
+        // Criar gradiente para o gráfico
+        const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+        gradient.addColorStop(0, 'rgba(46, 134, 222, 0.6)');
+        gradient.addColorStop(1, 'rgba(46, 134, 222, 0.1)');
+        
         let investmentChart = new Chart(ctx, {
             type: 'line',
             data: {
                 labels: [],
                 datasets: [{
-                    label: 'Valor do Investimento',
+                    label: 'Valor do Investimento (Nominal)',
                     data: [],
                     borderColor: '#2E86DE',
-                    backgroundColor: 'rgba(46, 134, 222, 0.1)',
+                    backgroundColor: gradient,
                     fill: true,
-                    tension: 0.4
+                    tension: 0.3,
+                    pointBackgroundColor: '#fff',
+                    pointBorderWidth: 2,
+                    pointRadius: 4,
+                    pointHoverRadius: 6
+                }, {
+                    label: 'Valor Ajustado pela Inflação',
+                    data: [],
+                    borderColor: '#10AC84',
+                    backgroundColor: 'rgba(16, 172, 132, 0.1)',
+                    fill: true,
+                    tension: 0.3,
+                    borderDash: [5, 5],
+                    pointBackgroundColor: '#fff',
+                    pointBorderWidth: 2,
+                    pointRadius: 4,
+                    pointHoverRadius: 6
                 }]
             },
             options: {
@@ -536,12 +725,72 @@
                 plugins: {
                     title: {
                         display: true,
-                        text: 'Projeção do Seu Investimento'
+                        text: 'Projeção do Seu Investimento',
+                        font: {
+                            size: 16,
+                            family: 'Montserrat'
+                        }
+                    },
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false,
+                        backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                        titleFont: {
+                            family: 'Montserrat'
+                        },
+                        bodyFont: {
+                            family: 'Open Sans'
+                        },
+                        callbacks: {
+                            label: function(context) {
+                                return context.dataset.label + ': R$ ' + context.raw.toFixed(2).replace('.', ',');
+                            }
+                        }
+                    },
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            font: {
+                                family: 'Open Sans'
+                            },
+                            padding: 20
+                        }
                     }
                 },
                 scales: {
                     y: {
-                        beginAtZero: true
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.05)'
+                        },
+                        ticks: {
+                            callback: function(value) {
+                                return 'R$ ' + value.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+                            },
+                            font: {
+                                family: 'Open Sans'
+                            }
+                        }
+                    },
+                    x: {
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.05)'
+                        },
+                        ticks: {
+                            font: {
+                                family: 'Open Sans'
+                            }
+                        }
+                    }
+                },
+                interaction: {
+                    intersect: false,
+                    mode: 'index'
+                },
+                animations: {
+                    tension: {
+                        duration: 1000,
+                        easing: 'linear'
                     }
                 }
             }
@@ -559,6 +808,10 @@
             // Atualizar valores exibidos nos sliders
             document.getElementById('timeValue').textContent = time + ' anos';
             document.getElementById('interestValue').textContent = interestRate.toFixed(1) + '%';
+            
+            // Atualizar texto de resumo
+            document.getElementById('resultYears').textContent = time + ' anos';
+            document.getElementById('resultRate').textContent = interestRate.toFixed(1) + '%';
             
             // Calcular projeção
             let months = time * 12;
@@ -594,16 +847,57 @@
                 }
             }
             
+            // Calcular percentuais
+            const nominalGain = currentAmount - totalInvested;
+            const nominalGainPercent = (nominalGain / totalInvested * 100).toFixed(1);
+            
+            const realGainValue = adjustedAmount - totalInvested;
+            const realGainPercent = (realGainValue / totalInvested * 100).toFixed(1);
+            
+            const annualRealReturn = (Math.pow(adjustedAmount / totalInvested, 1/time) - 1) * 100;
+            
             // Atualizar resultados
-            document.getElementById('totalInvested').textContent = 'R$ ' + totalInvested.toFixed(2).replace('.', ',');
-            document.getElementById('finalAmount').textContent = 'R$ ' + currentAmount.toFixed(2).replace('.', ',');
-            document.getElementById('adjustedAmount').textContent = 'R$ ' + adjustedAmount.toFixed(2).replace('.', ',');
-            document.getElementById('realGain').textContent = 'R$ ' + (adjustedAmount - totalInvested).toFixed(2).replace('.', ',');
+            document.getElementById('totalInvested').textContent = formatCurrency(totalInvested);
+            document.getElementById('finalAmount').textContent = formatCurrency(currentAmount);
+            document.getElementById('adjustedAmount').textContent = formatCurrency(adjustedAmount);
+            
+            const realGainElement = document.getElementById('realGain');
+            realGainElement.textContent = formatCurrency(realGainValue);
+            
+            // Ajustar cores baseadas no resultado
+            const realGainCard = document.getElementById('realGainCard');
+            if (realGainValue > 0) {
+                realGainCard.className = 'result-card positive';
+                realGainElement.className = 'card-value card-positive';
+            } else if (realGainValue < 0) {
+                realGainCard.className = 'result-card negative';
+                realGainElement.className = 'card-value card-negative';
+            } else {
+                realGainCard.className = 'result-card neutral';
+                realGainElement.className = 'card-value';
+            }
+            
+            // Atualizar percentuais
+            document.getElementById('nominalGainPercent').textContent = 
+                (nominalGain >= 0 ? '+' : '') + nominalGainPercent + '%';
+            document.getElementById('realGainPercent').textContent = 
+                (realGainValue >= 0 ? '+' : '') + realGainPercent + '%';
+            document.getElementById('realGainPercent').className = 
+                'result-change ' + (realGainValue >= 0 ? 'change-positive' : 'change-negative');
+                
+            document.getElementById('annualRealReturn').textContent = 
+                (annualRealReturn >= 0 ? '+' : '') + annualRealReturn.toFixed(2) + '% ao ano';
             
             // Atualizar gráfico
             investmentChart.data.labels = labels;
             investmentChart.data.datasets[0].data = data;
+            investmentChart.data.datasets[1].data = adjustedData;
             investmentChart.update();
+        }
+
+        // Função para formatar valores monetários
+        function formatCurrency(value) {
+            return 'R$ ' + value.toFixed(2).replace('.', ',').replace(/\B(?=(\d{3})+(?!\d))/g, ".");
         }
 
         // Função para abrir abas
